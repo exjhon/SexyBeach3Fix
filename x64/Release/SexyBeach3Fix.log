@@ -1,0 +1,11 @@
+﻿  pch.cpp
+  SexyBeach3Fix.cpp
+  SexyBeach3FixDlg.cpp
+C:\Users\Sam Exjhon\source\repos\SexyBeach3Fix\SexyBeach3FixDlg.cpp(281,26): warning C4129: “V”: 不可识别的字符转义序列
+  (编译源文件“/SexyBeach3FixDlg.cpp”)
+  
+  正在生成代码
+  Previous IPDB not found, fall back to full compilation.
+  All 419 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+  SexyBeach3Fix.vcxproj -> C:\Users\Sam Exjhon\source\repos\SexyBeach3Fix\x64\Release\SexyBeach3Fix.exe

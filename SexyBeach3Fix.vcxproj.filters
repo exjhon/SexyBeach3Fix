@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SexyBeach3Fix.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SexyBeach3FixDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SexyBeach3Fix.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SexyBeach3FixDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SexyBeach3Fix.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\SexyBeach3Fix.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\myres1.bin">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="x64\Release\fix\1.dll" />
+    <None Include="x64\Release\fix\2.dll" />
+    <None Include="x64\Release\fix\3.dll" />
+    <None Include="x64\Release\fix\dgx64D3D9.dll" />
+    <None Include="x64\Release\fix\dgx64dgVoodoo.conf" />
+    <None Include="x64\Release\fix\dgx64dgVoodooCpl.exe" />
+    <None Include="x64\Release\fix\dgx86D3D8.dll" />
+    <None Include="x64\Release\fix\dgx86D3D9.dll" />
+    <None Include="x64\Release\fix\dgx86D3DImm.dll" />
+    <None Include="x64\Release\fix\dgx86DDraw.dll" />
+    <None Include="x64\Release\fix\dgx86dgVoodoo.conf" />
+    <None Include="x64\Release\fix\dgx86dgVoodooCpl.exe" />
+    <None Include="x64\Release\fix\vcredist_x86.exe" />
+    <None Include="x64\Release\fix\x32d3d9.dll" />
+    <None Include="x64\Release\fix\x32d3d10core.dll" />
+    <None Include="x64\Release\fix\x32d3d11.dll" />
+    <None Include="x64\Release\fix\x32dxgi.dll" />
+    <None Include="x64\Release\fix\x64d3d9.dll" />
+    <None Include="x64\Release\fix\x64d3d10core.dll" />
+    <None Include="x64\Release\fix\x64d3d11.dll" />
+    <None Include="x64\Release\fix\x64dxgi.dll" />
+    <None Include="x64\Release\fix\DirectX9.zip" />
+    <None Include="x64\Release\fix\jrxoff.bat">
+      <Filter>源文件</Filter>
+    </None>
+    <None Include="x64\Release\fix\jrxon.bat">
+      <Filter>源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\SexyBeach3Fix.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
