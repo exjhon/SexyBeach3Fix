@@ -8,7 +8,11 @@ A Sexy Beach 3 fixer that solves Sexy Beach 3's win10 compatibility problems and
 # 功能
 
 1.导入注册表补丁。否则游戏会报错“Sexyビーチ3がインストールされていません。”
+
 2.清理错误注册表项。该注册表项会导致游戏无法正常读取配置文件。
+
 3.关闭动画再生。游戏中播放动画的解码器可能和win10不兼容，会导致进入播动画的场景时崩溃。
+
 4.安装驱动程序。该程序内置了vcredist和directx9并且会静默安装。
+
 5.安装右侧所选补丁。该补丁包括三种d3d9.dll，该动态链接库影响游戏的启动和3d画面。除此之外，还包含dgvoodoo补丁和DXVK补丁，以及修改主程序的兼容模式的功能。
