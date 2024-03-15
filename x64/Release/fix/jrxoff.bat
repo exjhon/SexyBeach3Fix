@@ -17,18 +17,6 @@ if %errorlevel% equ 0 (
     echo 关闭兼容模式失败！
 
 )
-rem 构建 Sexyビーチ3Plus.exe 的完整路径
-set "ProgramPath=%BatchFolder%\Sexyビーチ3Plus.exe"
-
-rem 删除兼容性模式设置
-reg delete "HKCU\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" /v "%ProgramPath%" /f >nul 2>&1
-
-if %errorlevel% equ 0 (
-    echo 关闭兼容模式成功！
-) else (
-    echo 关闭兼容模式失败！
-
-)
 set "CurrentDir=%~dp0"
 cd /d "%CurrentDir%"
 del jrxoff.bat
