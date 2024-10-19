@@ -85,25 +85,26 @@ EXSTYLE WS_EX_APPWINDOW
 CAPTION "SexyBeach3修复程序"
 FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    CTEXT           "请选择你要安装的d3d9补丁：\n（如果一个不行就换另一个试试）\n（3d画面卡顿也可以试着换一个）",IDC_STATIC,170,65,129,26
+    CTEXT           "请选择你要安装的d3d9补丁：\n（如果一个不行就换另一个试试）\n（3d画面卡顿也可以试着换一个）",IDC_STATIC,170,63,129,26
     DEFPUSHBUTTON   "一键修复",IDC_BUTTON1,20,12,280,40,BS_CENTER,WS_EX_STATICEDGE
     PUSHBUTTON      "导入注册表",IDC_BUTTON2,20,64,135,23
     PUSHBUTTON      "清理错误注册表项",IDC_BUTTON3,20,89,135,23
     PUSHBUTTON      "关闭动画再生",IDC_BUTTON4,20,114,135,23
     PUSHBUTTON      "安装驱动程序",IDC_BUTTON5,20,139,135,23
     PUSHBUTTON      "安装右侧选定补丁",IDC_BUTTON6,20,164,135,23
-    CONTROL         "第一个",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,178,92,38,10
-    CONTROL         "第二个",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,217,92,38,10
-    CONTROL         "第三个",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,256,92,38,10
+    CONTROL         "第一个",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,167,91,32,10
+    CONTROL         "第二个",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,201,91,32,10
+    CONTROL         "第三个",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,235,91,32,10
+    CONTROL         "第四个",IDC_RADIO10,"Button",BS_AUTORADIOBUTTON,269,91,32,10
     CONTROL         "32位",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON,196,123,31,10
     CONTROL         "64位",IDC_RADIO5,"Button",BS_AUTORADIOBUTTON,241,123,31,10
     CONTROL         "32位",IDC_RADIO6,"Button",BS_AUTORADIOBUTTON,195,154,31,10
     CONTROL         "64位",IDC_RADIO7,"Button",BS_AUTORADIOBUTTON,241,154,31,10
     CTEXT           "或者您也可以选择下列高级补丁：\n1.dgvoodoo补丁（需手动配置，可开4k）：",IDC_STATIC,158,104,158,18
     CTEXT           "2.DXVK补丁（修复成功概率最高）\n （可能需要修改程序兼容性生效）：",IDC_STATIC,174,135,123,18
-    CTEXT           "是否更改程序兼容性：",IDC_STATIC,196,167,75,8
-    CONTROL         "修改兼容性",IDC_RADIO8,"Button",BS_AUTORADIOBUTTON,175,179,53,10
-    CONTROL         "关闭兼容性（默认）",IDC_RADIO9,"Button",BS_AUTORADIOBUTTON,231,179,82,10
+    CTEXT           "是否更改性感沙滩3程序兼容性：",IDC_STATIC,182,167,108,8
+    CONTROL         "修改兼容性",IDC_RADIO8,"Button",BS_AUTORADIOBUTTON,173,179,53,10
+    CONTROL         "关闭兼容性（默认）",IDC_RADIO9,"Button",BS_AUTORADIOBUTTON,229,179,78,10
     EDITTEXT        IDC_EDIT1,0,192,320,12,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
 END
 
@@ -114,8 +115,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,3,0,2
- PRODUCTVERSION 1,3,0,2
+ FILEVERSION 1,4,0,1
+ PRODUCTVERSION 1,4,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -132,12 +133,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Nowhere"
             VALUE "FileDescription", "用于修复性感沙滩3在win10及以上的兼容性问题。"
-            VALUE "FileVersion", "1.3.0.2"
+            VALUE "FileVersion", "1.4.0.1"
             VALUE "InternalName", "SexyBeach3Fix.exe"
             VALUE "LegalCopyright", "由一个最喜欢赤城爱美的粉丝制作"
             VALUE "OriginalFilename", "SexyBeach3Fix.exe"
             VALUE "ProductName", "SexyBeach3Fix"
-            VALUE "ProductVersion", "1.3.0.2"
+            VALUE "ProductVersion", "1.4.0.1"
         END
     END
     BLOCK "VarFileInfo"
@@ -189,7 +190,8 @@ BEGIN
     100, 100, 0, 0,
     100, 100, 0, 0,
     100, 100, 0, 0,
-    0, 100, 100, 0
+    0, 100, 100, 0,
+    100, 100, 0, 0
 END
 
 
@@ -245,6 +247,12 @@ IDR_DXZIP               MYRES                   "x64\\Release\\fix\\DirectX9.zip
 IDR_JRXOFF              MYRES                   "x64\\Release\\fix\\jrxoff.bat"
 
 IDR_JRXON               MYRES                   "x64\\Release\\fix\\jrxon.bat"
+
+IDR_4_DLL               MYRES                   "x64\\Release\\fix\\4.dll"
+
+IDR_X32D3D8             MYRES                   "x64\\Release\\fix\\x32d3d8.dll"
+
+IDR_X64D3D8             MYRES                   "x64\\Release\\fix\\x64d3d8.dll"
 
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
