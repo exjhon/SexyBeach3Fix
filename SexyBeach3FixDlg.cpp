@@ -1,4 +1,4 @@
-﻿
+
 // SexyBeach3FixDlg.cpp: 实现文件
 //
 
@@ -19,7 +19,7 @@
 #include <winbase.h>
 #include <tchar.h>
 #include <shlwapi.h>
-
+#include <tlhelp32.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -69,8 +69,7 @@ BOOL CSexyBeach3FixDlg::OnInitDialog()
     }
 	// 默认选择DXVK的选项
 	((CButton*)GetDlgItem(IDC_RADIO6))->SetCheck(TRUE); 
-    //默认修改兼容性
-    ((CButton*)GetDlgItem(IDC_RADIO8))->SetCheck(TRUE); 
+
 
     // 获取当前应用程序的路径
     TCHAR szPath[MAX_PATH];
@@ -91,10 +90,19 @@ BOOL CSexyBeach3FixDlg::OnInitDialog()
     // 如果不存在，则显示错误消息
     if (!bAExeExists && !bBExeExists && !bCExeExists && !bDExeExists)
     {
-        MessageBox(_T("未找到游戏主程序，请勿在压缩包里直接运行该程序，\n解压后把本程序放到游戏目录里运行！"), _T("错误"), MB_ICONWARNING);
+        MessageBox(_T("未找到性感沙滩3主程序，请勿在压缩包里直接运行该程序，\n解压后把本程序放到性感沙滩3游戏目录里运行！\n如果是用于其他游戏，请无视该提醒。\n因为未找到性感沙滩3，专用于性感沙滩3的相关功能已禁用。"), _T("警告"), MB_ICONWARNING);
+        GetDlgItem(IDC_BUTTON1)->EnableWindow(FALSE);
+        GetDlgItem(IDC_BUTTON2)->EnableWindow(FALSE);
+        GetDlgItem(IDC_BUTTON3)->EnableWindow(FALSE);
+        GetDlgItem(IDC_BUTTON4)->EnableWindow(FALSE);
+        GetDlgItem(IDC_RADIO8)->EnableWindow(FALSE);
+        GetDlgItem(IDC_RADIO9)->EnableWindow(FALSE);
         return FALSE;
     }
-
+    else {
+        //默认修改兼容性
+        ((CButton*)GetDlgItem(IDC_RADIO8))->SetCheck(TRUE);
+    }
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -158,6 +166,30 @@ BOOL InstallVCDX(const CString& programPath, const CString& arguments) {
     // 返回安装结果
     return (exitCode == 0);
 }
+
+//杀死性感沙滩3主程序
+bool TerminateSB3Process() {
+    const wchar_t* processName = L"SexyBeach3PlusCN.exe"; // 这里的 L 前缀表示宽字符字符串
+    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    PROCESSENTRY32W pEntry;
+    pEntry.dwSize = sizeof(pEntry);
+    BOOL hRes = Process32FirstW(hSnapShot, &pEntry); // 这里的函数名 Process32FirstW
+    while (hRes) {
+        if (wcscmp(pEntry.szExeFile, processName) == 0) { // 这里的函数名 wcscmp
+            HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD)pEntry.th32ProcessID);
+            if (hProcess != NULL) {
+                TerminateProcess(hProcess, 9);
+                CloseHandle(hProcess);
+                CloseHandle(hSnapShot);
+                return true;
+            }
+        }
+        hRes = Process32NextW(hSnapShot, &pEntry); // 这里的函数名 Process32NextW
+    }
+    CloseHandle(hSnapShot);
+    return false;
+}
+
 bool DeleteFolderFiles(const CString& folderPath) {
     // 构建搜索文件夹的路径
     CString searchPath = folderPath + _T("\\*.*");
@@ -344,11 +376,11 @@ void CSexyBeach3FixDlg::OnBnClickedButton4()
     char szSaveName1[MAX_PATH] = "DirectX9.zip";
     bool bSuccess1 = FreeMyResource(IDR_DXZIP, "MYRES", szSaveName1);
     if (bSuccess1) AppendToEditCtrl(_T("成功释放dx9安装程序。\r\n"));
-    else MessageBox(_T("释放dx9安装程序失败。"), _T("错误"), MB_ICONWARNING);
+    else MessageBox(_T("释放dx9安装程序失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
     char szSaveName2[MAX_PATH] = "vcredist_x86.exe";
     bool bSuccess2 = FreeMyResource(IDR_VCX86, "MYRES", szSaveName2);
     if (bSuccess2) AppendToEditCtrl(_T("成功释放VC安装程序。\r\n"));
-    else MessageBox(_T("释放VC安装程序失败。"), _T("错误"), MB_ICONWARNING);
+    else MessageBox(_T("释放VC安装程序失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
 
     // 获取程序所在目录路径
     CString strExePath;
@@ -369,7 +401,7 @@ void CSexyBeach3FixDlg::OnBnClickedButton4()
     // 解压 DirectX9.zip 到程序所在目录
     if (ExtractZip(strZipFilePath, strDestFolderPath)) AppendToEditCtrl(_T("成功解压dx9安装程序。\r\n"));
     else {
-        MessageBox(_T("解压dx9安装程序失败！"), _T("错误"), MB_ICONWARNING);
+        MessageBox(_T("解压dx9安装程序失败。"), _T("错误"), MB_ICONWARNING);
     }
 
     // 调用安装函数
@@ -385,7 +417,7 @@ void CSexyBeach3FixDlg::OnBnClickedButton4()
     // 清除文件夹内的所有文件
     CString strFolderPath = strExePath + _T("\\DirectX9");
     if (DeleteFolderFiles(strFolderPath)) AppendToEditCtrl(_T("成功安装所有驱动程序。\r\n"));
-    else MessageBox(_T("文件夹内文件清除失败！"), _T("错误"), MB_ICONWARNING);
+    else MessageBox(_T("DX9安装文件清除失败。"), _T("错误"), MB_ICONWARNING);
 
 }
 
@@ -401,6 +433,10 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
     int nRadio7State = ((CButton*)GetDlgItem(IDC_RADIO7))->GetCheck();
     int nRadio8State = ((CButton*)GetDlgItem(IDC_RADIO8))->GetCheck();
     int nRadio9State = ((CButton*)GetDlgItem(IDC_RADIO9))->GetCheck();
+    int nRadio10State = ((CButton*)GetDlgItem(IDC_RADIO9))->GetCheck();
+
+    //先把沙滩3杀了
+    TerminateSB3Process();
 
     // 获取程序所在目录路径
     CString strExePath;
@@ -422,7 +458,7 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
         char szSaveName[MAX_PATH] = "d3d9.dll";
         bool bSuccess = FreeMyResource(IDR_1_DLL, "MYRES", szSaveName);
         if (bSuccess) AppendToEditCtrl(_T("成功安装d3d9补丁。\r\n"));
-        else MessageBox(_T("安装d3d9补丁失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装d3d9补丁失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
     }
     else if (nRadio2State == BST_CHECKED)
     {
@@ -432,7 +468,7 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
         char szSaveName[MAX_PATH] = "d3d9.dll";
         bool bSuccess = FreeMyResource(IDR_2_DLL, "MYRES", szSaveName);
         if (bSuccess) AppendToEditCtrl(_T("成功安装d3d9补丁。\r\n"));
-        else MessageBox(_T("安装d3d9补丁失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装d3d9补丁失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
     }
     else if (nRadio3State == BST_CHECKED)
     {
@@ -442,7 +478,17 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
         char szSaveName[MAX_PATH] = "d3d9.dll";
         bool bSuccess = FreeMyResource(IDR_3_DLL, "MYRES", szSaveName);
         if (bSuccess) AppendToEditCtrl(_T("成功安装d3d9补丁。\r\n"));
-        else MessageBox(_T("安装d3d9补丁失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装d3d9补丁失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
+    }
+    else if (nRadio10State == BST_CHECKED)
+    {
+        // 删除文件
+        CleantheFolder();
+        // 复制文件
+        char szSaveName[MAX_PATH] = "d3d9.dll";
+        bool bSuccess = FreeMyResource(IDR_4_DLL, "MYRES", szSaveName);
+        if (bSuccess) AppendToEditCtrl(_T("成功安装d3d9补丁。\r\n"));
+        else MessageBox(_T("安装d3d9补丁失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
     }
     else if (nRadio4State == BST_CHECKED)
     {
@@ -452,27 +498,27 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
         char szSaveName1[MAX_PATH] = "D3D8.dll";
         bool bSuccess = FreeMyResource(IDR_DG86D3D8, "MYRES", szSaveName1);
         if (bSuccess) AppendToEditCtrl(_T("安装dgvoodoo(1/6)...\r\n"));
-        else MessageBox(_T("安装D3D8.dll失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装D3D8.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName2[MAX_PATH] = "D3D9.dll";
         bSuccess = FreeMyResource(IDR_DG86D3D9, "MYRES", szSaveName2);
         if (bSuccess) AppendToEditCtrl(_T("安装dgvoodoo(2/6)...\r\n"));
-        else MessageBox(_T("安装D3D9.dll失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装D3D9.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName3[MAX_PATH] = "D3DImm.dll";
         bSuccess = FreeMyResource(IDR_DG86D3DIMM, "MYRES", szSaveName3);
         if (bSuccess) AppendToEditCtrl(_T("安装dgvoodoo(3/6)...\r\n"));
-        else MessageBox(_T("安装D3DImm.dll失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装D3DImm.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName4[MAX_PATH] = "DDraw.dll";
         bSuccess = FreeMyResource(IDR_DG86DDRAW, "MYRES", szSaveName4);
         if (bSuccess) AppendToEditCtrl(_T("安装dgvoodoo(4/6)...\r\n"));
-        else MessageBox(_T("安装DDraw.dll失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装DDraw.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName5[MAX_PATH] = "dgVoodoo.conf";
         bSuccess = FreeMyResource(IDR_DG86CFG, "MYRES", szSaveName5);
         if (bSuccess) AppendToEditCtrl(_T("安装dgvoodoo(5/6)...\r\n"));
-        else MessageBox(_T("安装dgVoodoo.conf失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装dgVoodoo.conf失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName6[MAX_PATH] = "dgVoodooCpl.exe";
         bSuccess = FreeMyResource(IDR_DG86EXE, "MYRES", szSaveName6);
         if (bSuccess) AppendToEditCtrl(_T("安装dgvoodoo成功\r\n"));
-        else MessageBox(_T("安装dgVoodooCpl.exe失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装dgVoodooCpl.exe失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
     }
     else if (nRadio5State == BST_CHECKED)
     {
@@ -483,15 +529,15 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
         char szSaveName1[MAX_PATH] = "D3D9.dll";
         bool bSuccess = FreeMyResource(IDR_DG64D3D9, "MYRES", szSaveName1);
         if (bSuccess) AppendToEditCtrl(_T("安装dgvoodoo(1/3)...\r\n"));
-        else MessageBox(_T("安装D3D9.dll失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装D3D9.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName2[MAX_PATH] = "dgVoodoo.conf";
         bSuccess = FreeMyResource(IDR_DG64CFG, "MYRES", szSaveName2);
         if (bSuccess) AppendToEditCtrl(_T("安装dgvoodoo(2/3)...\r\n"));
-        else MessageBox(_T("安装dgVoodoo.conf失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装dgVoodoo.conf失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName3[MAX_PATH] = "dgVoodooCpl.exe";
         bSuccess = FreeMyResource(IDR_DG64EXE, "MYRES", szSaveName3);
         if (bSuccess) AppendToEditCtrl(_T("安装dgvoodoo成功\r\n"));
-        else MessageBox(_T("安装dgVoodooCpl.exe失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("安装dgVoodooCpl.exe失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         }
     else if (nRadio6State == BST_CHECKED)
     {
@@ -499,22 +545,26 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
         CleantheFolder();
 
         // 复制文件
+        char szSaveName0[MAX_PATH] = "d3d8.dll";
+        bool bSuccess = FreeMyResource(IDR_X32D3D8, "MYRES", szSaveName0);
+        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(1/5)...\r\n"));
+        else MessageBox(_T("安装d3d8.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName1[MAX_PATH] = "d3d9.dll";
-        bool bSuccess = FreeMyResource(IDR_X32D3D9, "MYRES", szSaveName1);
-        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(1/4)...\r\n"));
-        else MessageBox(_T("安装d3d9.dll失败。"), _T("错误"), MB_ICONWARNING);
+        bSuccess = FreeMyResource(IDR_X32D3D9, "MYRES", szSaveName1);
+        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(2/5)...\r\n"));
+        else MessageBox(_T("安装d3d9.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName2[MAX_PATH] = "d3d10core.dll";
         bSuccess = FreeMyResource(IDR_X32D3D10, "MYRES", szSaveName2);
-        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(2/4)...\r\n"));
-        else MessageBox(_T("安装d3d10core.dll失败。"), _T("错误"), MB_ICONWARNING);
+        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(3/5)...\r\n"));
+        else MessageBox(_T("安装d3d10core.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName3[MAX_PATH] = "d3d11.dll";
         bSuccess = FreeMyResource(IDR_X32D3D11, "MYRES", szSaveName3);
-        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(3/4)...\r\n"));
-        else MessageBox(_T("安装d3d11.dll失败。"), _T("错误"), MB_ICONWARNING);
+        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(4/5)...\r\n"));
+        else MessageBox(_T("安装d3d11.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName4[MAX_PATH] = "dxgi.dll";
         bSuccess = FreeMyResource(IDR_X32DXGI, "MYRES", szSaveName4);
-        if (bSuccess) AppendToEditCtrl(_T("安装DXVK成功\r\n"));
-        else MessageBox(_T("安装dxgi.dll失败。"), _T("错误"), MB_ICONWARNING);
+        if (bSuccess) AppendToEditCtrl(_T("安装DXVK成功。\r\n"));
+        else MessageBox(_T("安装dxgi.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         }
     else if (nRadio7State == BST_CHECKED)
     {
@@ -522,22 +572,26 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
         CleantheFolder();
 
         // 复制文件
+        char szSaveName0[MAX_PATH] = "d3d8.dll";
+        bool bSuccess = FreeMyResource(IDR_X64D3D8, "MYRES", szSaveName0);
+        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(1/5)...\r\n"));
+        else MessageBox(_T("安装d3d8.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName1[MAX_PATH] = "d3d9.dll";
-        bool bSuccess = FreeMyResource(IDR_X64D3D9, "MYRES", szSaveName1);
-        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(1/4)...\r\n"));
-        else MessageBox(_T("安装d3d9.dll失败。"), _T("错误"), MB_ICONWARNING);
+        bSuccess = FreeMyResource(IDR_X64D3D9, "MYRES", szSaveName1);
+        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(2/5)...\r\n"));
+        else MessageBox(_T("安装d3d9.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName2[MAX_PATH] = "d3d10core.dll";
         bSuccess = FreeMyResource(IDR_X64D3D10, "MYRES", szSaveName2);
-        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(2/4)...\r\n"));
-        else MessageBox(_T("安装d3d10core.dll失败。"), _T("错误"), MB_ICONWARNING);
+        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(3/5)...\r\n"));
+        else MessageBox(_T("安装d3d10core.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName3[MAX_PATH] = "d3d11.dll";
         bSuccess = FreeMyResource(IDR_X64D3D11, "MYRES", szSaveName3);
-        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(3/4)...\r\n"));
-        else MessageBox(_T("安装d3d11.dll失败。"), _T("错误"), MB_ICONWARNING);
+        if (bSuccess) AppendToEditCtrl(_T("安装DXVK(4/5)...\r\n"));
+        else MessageBox(_T("安装d3d11.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         char szSaveName4[MAX_PATH] = "dxgi.dll";
         bSuccess = FreeMyResource(IDR_X64DXGI, "MYRES", szSaveName4);
-        if (bSuccess) AppendToEditCtrl(_T("安装DXVK成功\r\n"));
-        else MessageBox(_T("安装dxgi.dll失败。"), _T("错误"), MB_ICONWARNING);
+        if (bSuccess) AppendToEditCtrl(_T("安装DXVK成功。\r\n"));
+        else MessageBox(_T("安装dxgi.dll失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
         }
     if (nRadio8State == BST_CHECKED)
     {
@@ -545,7 +599,7 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
         char szSaveName1[MAX_PATH] = "jrxon.bat";
         bool bSuccess = FreeMyResource(IDR_JRXON, "MYRES", szSaveName1);
         if (bSuccess) AppendToEditCtrl(_T("释放修改兼容性的批处理文件...\r\n"));
-        else MessageBox(_T("释放修改兼容性的批处理文件失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("释放修改兼容性的批处理文件失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
 
 
         CString strBatchFilePath = strExePath + _T("\\jrxon.bat");
@@ -576,7 +630,7 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
         char szSaveName1[MAX_PATH] = "jrxoff.bat";
         bool bSuccess = FreeMyResource(IDR_JRXOFF, "MYRES", szSaveName1);
         if (bSuccess) AppendToEditCtrl(_T("释放修改兼容性的批处理文件...\r\n"));
-        else MessageBox(_T("释放修改兼容性的批处理文件失败。"), _T("错误"), MB_ICONWARNING);
+        else MessageBox(_T("释放修改兼容性的批处理文件失败，请以管理员权限运行本补丁。"), _T("错误"), MB_ICONWARNING);
 
         CString strBatchFilePath = strExePath + _T("\\jrxoff.bat");
         SHELLEXECUTEINFO sei = { sizeof(sei) };
