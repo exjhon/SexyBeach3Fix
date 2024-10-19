@@ -433,7 +433,7 @@ void CSexyBeach3FixDlg::OnBnClickedButton5()
     int nRadio7State = ((CButton*)GetDlgItem(IDC_RADIO7))->GetCheck();
     int nRadio8State = ((CButton*)GetDlgItem(IDC_RADIO8))->GetCheck();
     int nRadio9State = ((CButton*)GetDlgItem(IDC_RADIO9))->GetCheck();
-    int nRadio10State = ((CButton*)GetDlgItem(IDC_RADIO9))->GetCheck();
+    int nRadio10State = ((CButton*)GetDlgItem(IDC_RADIO10))->GetCheck();
 
     //先把沙滩3杀了
     TerminateSB3Process();
